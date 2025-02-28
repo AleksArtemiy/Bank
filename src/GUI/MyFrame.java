@@ -1,5 +1,7 @@
 package GUI;
 
+import Classes.Library;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -7,16 +9,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MyFrame extends JFrame {
+    private Library library;
 
     public MyFrame() {
+        library = new Library();
+
         // Установка заголовка окна
         setTitle("Красивый интерфейс");
-
-        // Установка размеров окна
         setSize(1000, 800);
-
-        // Установка операции закрытия окна
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
         // Главная панель с BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
@@ -51,7 +53,7 @@ public class MyFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                new AdminPage();
+                new AdminPage(library);
             }
         });
 
@@ -89,15 +91,5 @@ public class MyFrame extends JFrame {
         button.setFocusPainted(false); // Убираем обводку при фокусе
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Отступы внутри кнопки
         return button;
-    }
-
-    public static void main(String[] args) {
-        // Запуск приложения
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MyFrame();
-            }
-        });
     }
 }

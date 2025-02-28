@@ -1,8 +1,7 @@
 package GUI;
 
-import GUI.AdminPages.RegisterBookPage;
-import GUI.AdminPages.RegisterUserPage;
-import GUI.AdminPages.ViewReadersPage;
+import Classes.Library;
+import GUI.AdminPages.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -12,7 +11,7 @@ import java.awt.event.ActionListener;
 
 public class AdminPage extends JFrame {
 
-    public AdminPage() {
+    public AdminPage(Library library) {
         // Установка заголовка окна
         setTitle("Панель администратора");
 
@@ -70,7 +69,7 @@ public class AdminPage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Закрыть текущее окно
-                new RegisterUserPage(); // Открыть окно регистрации читателя
+                new RegisterUserPage(library); // Открыть окно регистрации читателя
             }
         });
 
@@ -80,7 +79,7 @@ public class AdminPage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Закрыть текущее окно
-                new RegisterBookPage(); // Открыть окно регистрации читателя
+                new RegisterBookPage(library); // Открыть окно регистрации книги
             }
         });
 
@@ -90,7 +89,47 @@ public class AdminPage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Закрыть текущее окно
-                new ViewReadersPage(); // Открыть окно регистрации читателя
+                new ViewReadersPage(library); // Открыть окно просмотра читателей
+            }
+        });
+
+        //Кнопка "Просмотр списка читателей"
+        JButton bookListButton = createStyledButton("Просмотр списка книг", new Color(0x933FA1));
+        bookListButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Закрыть текущее окно
+                new ViewBooksPage(library); // Открыть окно просмотра читателей
+            }
+        });
+
+        //Кнопка "Удаление книг и читателей"
+        JButton deleteBookAndReaderButton = createStyledButton("Удаление книг или читателя", new Color(0x66A13F));
+        deleteBookAndReaderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Закрыть текущее окно
+                new deleteBookAndReaderPage(library); // Открыть окно просмотра читателей
+            }
+        });
+
+        // Кнопка "Взять и вернуть книгу"
+        JButton takeAndReturnBookButton = createStyledButton("Взять или вернуть книгу", new Color(0xB1A83F));
+        takeAndReturnBookButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Закрыть текущее окно
+                new takeAndReturnBookPage(library); // Открыть окно просмотра читателей
+            }
+        });
+
+        // Кнопка "Транзакции"
+        JButton transactionButton = createStyledButton("Транзакции", new Color(0xA7ABF9));
+        transactionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Закрыть текущее окно
+                new ViewTransactionsPage(library); // Открыть окно просмотра читателей
             }
         });
 
@@ -98,6 +137,10 @@ public class AdminPage extends JFrame {
         centerPanel.add(registerReaderButton);
         centerPanel.add(registerBookButton);
         centerPanel.add(readersListButton);
+        centerPanel.add(bookListButton);
+        centerPanel.add(deleteBookAndReaderButton);
+        centerPanel.add(takeAndReturnBookButton);
+        centerPanel.add(transactionButton);
 
         // Добавление панелей на главную панель
         mainPanel.add(topPanel, BorderLayout.NORTH);
@@ -119,15 +162,5 @@ public class AdminPage extends JFrame {
         button.setFocusPainted(false); // Убираем обводку при фокусе
         button.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25)); // Отступы внутри кнопки
         return button;
-    }
-
-    public static void main(String[] args) {
-        // Запуск приложения
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new AdminPage();
-            }
-        });
     }
 }

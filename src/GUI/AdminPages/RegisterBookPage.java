@@ -1,5 +1,7 @@
 package GUI.AdminPages;
 
+import Classes.Book;
+import Classes.Library;
 import GUI.AdminPage;
 
 import javax.swing.*;
@@ -9,8 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class RegisterBookPage extends JFrame {
+    public RegisterBookPage(Library library) {
 
-    public RegisterBookPage() {
         // Установка заголовка окна
         setTitle("Регистрация книги");
 
@@ -50,7 +52,7 @@ public class RegisterBookPage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Закрыть текущее окно
-                new AdminPage(); // Открыть окно администратора
+                new AdminPage(library); // Открыть окно администратора
             }
         });
 
@@ -58,7 +60,7 @@ public class RegisterBookPage extends JFrame {
         topPanel.add(backButton, BorderLayout.WEST);
 
         // Центральная панель с формой регистрации
-        JPanel centerPanel = new JPanel(new GridLayout(4, 2, 10, 10)); // 4 строки, 2 столбца
+        JPanel centerPanel = new JPanel(new GridLayout(5, 2, 10, 10)); // 4 строки, 2 столбца
         centerPanel.setBackground(Color.WHITE);
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Внутренние отступы
 
@@ -80,6 +82,12 @@ public class RegisterBookPage extends JFrame {
         JTextField editionField = new JTextField();
         editionField.setFont(new Font("Arial", Font.PLAIN, 14));
 
+        // Поле для ввода жанра
+        JLabel genreLabel = new JLabel("Жанр:");
+        genreLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        JTextField genreField = new JTextField();
+        genreField.setFont(new Font("Arial", Font.PLAIN, 14));
+
         // Кнопка "Зарегистрировать"
         JButton submitButton = new JButton("Зарегистрировать");
         submitButton.setFont(new Font("Arial", Font.BOLD, 14));
@@ -92,7 +100,29 @@ public class RegisterBookPage extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(RegisterBookPage.this, "Книга успешно зарегистрирована!");
+                // Получаем значения
+                String title = nameField.getText();
+                String author = authorField.getText();
+                String edition = editionField.getText();
+                String genre = genreField.getText();
+
+                // Проверка на пустыые поля
+                if (title.isEmpty() || author.isEmpty() || edition.isEmpty() || genre.isEmpty()) {
+                    JOptionPane.showMessageDialog(RegisterBookPage.this, "Все поля должны быть заполнены!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Создание новой книги
+                Book newBook = new Book(title, author, edition, genre, 0);
+
+                library.addBook(newBook);
+
+                nameField.setText("");
+                authorField.setText("");
+                editionField.setText("");
+                genreField.setText("");
+
+                JOptionPane.showMessageDialog(RegisterBookPage.this, "Книга успешно зарегистрирована!", "Успех", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -103,6 +133,8 @@ public class RegisterBookPage extends JFrame {
         centerPanel.add(authorField);
         centerPanel.add(editionLabel);
         centerPanel.add(editionField);
+        centerPanel.add(genreLabel);
+        centerPanel.add(genreField);
         centerPanel.add(new JLabel()); // Пустая ячейка для выравнивания
         centerPanel.add(submitButton);
 
@@ -115,15 +147,5 @@ public class RegisterBookPage extends JFrame {
 
         // Отображение окна
         setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        // Запуск приложения
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new RegisterBookPage();
-            }
-        });
     }
 }

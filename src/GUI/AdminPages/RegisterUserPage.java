@@ -1,5 +1,7 @@
 package GUI.AdminPages;
 
+import Classes.Library;
+import Classes.Reader;
 import GUI.AdminPage;
 
 import javax.swing.*;
@@ -10,7 +12,7 @@ import java.awt.event.ActionListener;
 
 public class RegisterUserPage extends JFrame{
 
-    public RegisterUserPage(){
+    public RegisterUserPage(Library library){
         setTitle("Регистрация пользователя");
 
         setSize(400, 600);
@@ -34,17 +36,6 @@ public class RegisterUserPage extends JFrame{
         JTextField ageField = new JTextField();
         ageField.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        // Поле для ввода телефона
-        JLabel phoneLabel = new JLabel("Телефон:");
-        phoneLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        JTextField phoneField = new JTextField();
-        phoneField.setFont(new Font("Arial", Font.PLAIN, 14));
-
-        // Поле для ввода почты
-        JLabel emailLabel = new JLabel("Почта:");
-        emailLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        JTextField emailField = new JTextField();
-        emailField.setFont(new Font("Arial", Font.PLAIN, 14));
 
         // Кнопка вернуться назад
         JButton backButton = new JButton("Назад");
@@ -58,7 +49,7 @@ public class RegisterUserPage extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                new AdminPage();
+                new AdminPage(library);
             }
         });
 
@@ -74,7 +65,29 @@ public class RegisterUserPage extends JFrame{
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(RegisterUserPage.this, "Данные отправлены!");
+                String name = nameField.getText();
+                String ageText = ageField.getText();
+
+                if (name.isEmpty() || ageText.isEmpty()){
+                    JOptionPane.showMessageDialog(RegisterUserPage.this, "Заполните все поля!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    int age = Integer.parseInt(ageText);
+
+                    //Создание пользователя
+                    Reader newUser = new Reader(name, age);
+                    library.addUser(newUser);
+
+                    JOptionPane.showMessageDialog(RegisterUserPage.this, "Пользователь успешно зарегистрирован!");
+                    nameField.setText(""); // Очистка поля имени
+                    ageField.setText(""); // Очистка поля возраста
+
+                } catch (NumberFormatException ex){
+                    JOptionPane.showMessageDialog(RegisterUserPage.this, "Возраст должен быть числом!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                }
+
             }
         });
 
@@ -82,23 +95,10 @@ public class RegisterUserPage extends JFrame{
         mainPanel.add(nameField);
         mainPanel.add(ageLabel);
         mainPanel.add(ageField);
-        mainPanel.add(phoneLabel);
-        mainPanel.add(phoneField);
-        mainPanel.add(emailLabel);
-        mainPanel.add(emailField);
         mainPanel.add(backButton);
         mainPanel.add(submitButton);
 
         getContentPane().add(mainPanel);
         setVisible(true);
-    }
-
-    public static void main(String[] args){
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new RegisterUserPage();
-            }
-        });
     }
 }
